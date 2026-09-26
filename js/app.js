@@ -17,10 +17,10 @@ const CONFIG = {
     facebook: 'https://www.facebook.com/profile.php?id=61594307230402',
     instagram: 'https://www.instagram.com/vozcristiana2026/',
     youtube: 'https://youtube.com/@vozcristiana-q6b?si=69E_1ndSvoYnWLLQ',
-    tiktok: 'https://www.tiktok.com/@radioestacionmixperu1?_r=1&_t=ZS-99gdPikEHjd',
+    tiktok: 'https://www.tiktok.com/@djchochobarwilmer ',
     whatsapp: 'https://wa.link/j3mghy'
   },
-  wppText: 'Hola! Quiero pedir una canción y saludar en Radio Estación Mix 🎶'
+  wppText: 'Hola! Quiero pedir una canción y saludar en Radio Voz Cristiana 🎶'
 };
 
 const STREAM_URL = CONFIG.stream;
