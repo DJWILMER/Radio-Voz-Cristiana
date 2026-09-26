@@ -1,5 +1,5 @@
-/* Service Worker — Radio Estación Mix · Player PWA */
-const CACHE = 'estacionmix-1';
+/* Service Worker — Radio Voz Cristiana· Player PWA */
+const CACHE = 'Radio-Voz-Cristiana';
 
 const SHELL = [
   './',
