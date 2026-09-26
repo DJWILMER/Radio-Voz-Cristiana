@@ -1,50 +1,74 @@
-/* Service Worker — Radio Voz Cristiana· Player PWA */
-const CACHE = 'Radio-Voz-Cristiana';
+/* Service Worker — Radio Voz Cristiana PWA */
+const CACHE_NAME = 'voz-cristiana-shell-v2';
+const OFFLINE_URL = './offline.html';
 
-const SHELL = [
+// Solo se precachean recursos propios y estables. El streaming y la metadata
+// siempre deben solicitarse a la red para que la radio siga siendo en vivo.
+const APP_SHELL = [
   './',
   './index.html',
-  './logo.png',
+  './offline.html',
   './css/style.css',
   './js/app.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './icons/icon-512-mask.png',
-  './icons/icon-180.png'
+  './icons/icon-512-mask.png'
 ];
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => Promise.all(SHELL.map(u => c.add(u).catch(() => {})))).then(() => self.skipWaiting()));
-});
-
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => Promise.all(APP_SHELL.map(url => cache.add(url).catch(() => null))))
+      .then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener('fetch', e => {
-  const { request } = e;
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
+  );
+});
+
+function isLiveResource(url) {
+  return url.hostname === 'radioserver.radiovozdelcielo.com'
+    || url.hostname.includes('zeno.fm')
+    || url.hostname.includes('surfernetwork.com')
+    || url.pathname.endsWith('.mp3');
+}
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
+  if (url.origin !== self.location.origin || isLiveResource(url)) return;
 
-  /* Nunca cachear el stream ni la API de Zeno */
-  if (url.hostname.includes('stream.zeno.fm') || url.hostname.includes('api.zeno.fm') || url.hostname.includes('surfernetwork.com')) return;
+  // Las navegaciones funcionan offline mostrando una pantalla informativa.
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request).catch(() => caches.match('./index.html').then(
+        response => response || caches.match(OFFLINE_URL)
+      ))
+    );
+    return;
+  }
 
-  /* Solo manejar peticiones de la propia app */
-  if (url.origin !== self.location.origin) return;
-
-  /* Estrategia: cache-first para el shell, red si falla */
-  e.respondWith(
+  // Para CSS, JS, manifiesto e iconos: cache-first con actualización de red.
+  event.respondWith(
     caches.match(request).then(cached => {
-      if (cached) return cached;
-      return fetch(request).then(resp => {
-        const copy = resp.clone();
-        caches.open(CACHE).then(c => c.put(request, copy)).catch(() => {});
-        return resp;
-      }).catch(() => caches.match('./index.html'));
+      const network = fetch(request).then(response => {
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+        }
+        return response;
+      });
+      return cached || network.catch(() => caches.match(OFFLINE_URL));
     })
   );
 });
