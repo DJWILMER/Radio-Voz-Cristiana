@@ -1,7 +1,7 @@
 {
   "name": "Radio Voz — Cristiana en Vivo",
-  "short_name": "Estación Mix",
-  "description": "Player PWA de Radio Estación Mix. Escucha en vivo la mejor música, éxitos y mixes, con historial de canciones, temas de colores y redes sociales.",
+  "short_name": "Radio Cristiana",
+  "description": "Player PWA de Radio . Escucha en vivo la mejor música, éxitos y mixes, con historial de canciones, temas de colores y redes sociales.",
   "lang": "es",
   "start_url": "./index.html",
   "scope": "./",
