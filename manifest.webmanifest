@@ -1,0 +1,53 @@
+{
+  "name": "Radio Voz — Cristiana en Vivo",
+  "short_name": "Estación Mix",
+  "description": "Player PWA de Radio Estación Mix. Escucha en vivo la mejor música, éxitos y mixes, con historial de canciones, temas de colores y redes sociales.",
+  "lang": "es",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0908",
+  "theme_color": "#0a0908",
+  "categories": ["music", "entertainment", "radio"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512-mask.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Reproducir",
+      "short_name": "Play",
+      "url": "./index.html#play",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Lista de Canciones",
+      "short_name": "Lista",
+      "url": "./index.html#playlist",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "La Estación",
+      "short_name": "Estación",
+      "url": "./index.html#estacion",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
